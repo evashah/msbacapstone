@@ -1,0 +1,81 @@
+---
+title: "Summarizing Users and Friends Data"
+author: "ES"
+date: "August 29, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r, echo=FALSE}
+
+#### Installing packages, setting directory
+
+rm(list=ls())
+
+library(jsonlite)
+library(magrittr)
+library(knitr)
+library(ggplot2)
+
+setwd("C:/Users/SV Tech Holdings/Documents/NYU MSBA/Capstone/Data/User_Data")
+
+```
+
+
+```{r echo=FALSE}
+#### Reading RDS file and converting to list
+
+friends_list=as.matrix(readRDS("friends_list.rds"))
+
+# Converting to data frame and counting no of friends per user IDs
+user_friends=data.frame(rownames(friends_list)) %>% setNames("UserIDs")
+user_friends$No_of_Friends=do.call(rbind,lapply(friends_list[,1],function(x) length(x)))
+user_friends$Friends_IDs=friends_list[,1]
+
+#write.csv(as.matrix(user_friends),"user_friends.csv")
+
+# Summary 
+min_f = min(user_friends$No_of_Friends) %>% round(digits=0)
+max_f = max(user_friends$No_of_Friends) %>% round(digits=0)
+mean_f = mean(user_friends$No_of_Friends) %>% round(digits=0)
+unique_users=length(unique(user_friends$UserIDs))
+user_summary = c(min_f,mean_f,max_f) %>% t() %>% data.frame()
+```
+
+Total number of unique Yelp users = `r length(unique(user_friends$UserIDs))`
+
+```{r, echo=FALSE}
+# Summary Output
+user_summary %>% kable(col.names=c("Minimum","Average","Maximum"),format = "pandoc",caption = "Number of friends",align='c')
+
+### Distribution of Follower Counts
+p1=ggplot(data=user_friends,aes(user_friends$No_of_Friends))+geom_histogram(bins=20)+labs(x = "Friend Count",y="Frequency")
+p2=ggplot(data=user_friends,aes(user_friends$No_of_Friends))+geom_density()+labs(x = "Friend Count")
+
+library(gridExtra)
+grid.arrange(p1, p2, nrow=1,top="Distribution of Follower Count")
+
+p3=ggplot(data=user_friends,aes(user_friends$No_of_Friends))+geom_histogram(bins=20)+scale_x_log10()+labs(x = "Log(Friend Count)",y="Frequency")
+p4=ggplot(data=user_friends,aes(user_friends$No_of_Friends))+geom_density()+scale_x_log10()+labs(x = "Log(Friend Count)")
+grid.arrange(p3, p4, nrow=1,top="Semi-log scale distribution of Follower Count")
+
+
+### Frequency of Friend Counts
+friend_freq=as.data.frame(table(user_friends$No_of_Friends)) %>% setNames(c("Number of Friends","Frequency"))
+plot(friend_freq,main="Distribution of number of users to friends")
+
+tusers=sum(friend_freq$Frequency)
+friend_freq$Percent_of_Users=round((friend_freq$Frequency/tusers)*100,2)
+# Output
+data.frame(friend_freq$Percent_of_Users,friend_freq$`Number of Friends`) %>% head(n=10) %>% kable(col.names=c("Percent of Users","Number of Friends"),format = "pandoc", caption = "Fraction of users with a social edge (9 or less)",align='c')
+
+# Top 10 users with most number of friends
+top_10=data.frame(user_friends$UserIDs,user_friends$No_of_Friends,row.names = NULL) %>% setNames(c("User IDs","No. of Friends"))
+# Output
+head(top_10[order(top_10$`No. of Friends`, decreasing = TRUE),],13) %>% kable(caption="Top 10 Users with most number of friends",format = "pandoc")
+
+```
