@@ -1,0 +1,55 @@
+---
+title: "Summarizing Users and Friends Data"
+author: "ES"
+date: "August 29, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Installing packages, setting directory
+
+```{r, echo=FALSE}
+rm(list=ls())
+
+library(jsonlite)
+library(magrittr)
+library(knitr)
+library(ggplot2)
+
+setwd("C:/Users/SV Tech Holdings/Documents/NYU MSBA/Capstone/Data/User_Data")
+
+```
+
+#### Reading the Yelp - User JSON file
+
+```{r users, echo=FALSE,eval=FALSE}
+# read in individual JSON lines
+json_file <- "yelp_academic_dataset_user.json"
+
+# turn it into a proper array by separating each object with a "," and
+# wrapping that up in an array with "[]"'s.
+
+data_user <- fromJSON(sprintf("[%s]", paste(readLines(json_file), collapse=","))) # flattening and reading into dataframe, takes a long time
+
+# Saving file as a Rdata file
+save(data_user,file="user_data.Rdata")
+
+```
+
+#### Extracting friends list and saving as RDS file for future retrieval
+
+```{r echo=FALSE,eval=FALSE}
+# Save the friends list as a separate object
+friends_list=data_user$friends
+names(friends_list)=data_user$user_id # assigning user_ids to each vector in list
+
+#Saving friends list in a easy to retrieve R object 
+saveRDS(friends_list,"friends_list.rds") # save list for retrieval later with readRDS()
+#save(friends_list,file="Friends_List.Rdata")
+
+# Cleaning environment
+rm(list=ls())
+```
