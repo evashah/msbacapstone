@@ -1,0 +1,61 @@
+---
+title: "Summarizing Users and Friends Data"
+author: "ES"
+date: "August 29, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Installing packages, setting directory
+
+```{r, echo=FALSE}
+rm(list=ls())
+
+library(jsonlite)
+library(magrittr)
+library(knitr)
+library(ggplot2)
+
+setwd("C:/Users/SV Tech Holdings/Documents/NYU MSBA/Capstone/Data/User_Data")
+
+```
+
+#### Reading RDS file and converting to list
+
+```{r echo=FALSE}
+friends_list=as.matrix(readRDS("friends_list.rds"))
+
+# Converting to data frame and counting no of friends per user IDs
+user_friends=data.frame(rownames(friends_list)) %>% setNames("UserIDs")
+user_friends$No_of_Friends=do.call(rbind,lapply(friends_list[,1],function(x) length(x)))
+user_friends$Friends_IDs=friends_list[,1]
+
+#write.csv(as.matrix(user_friends),"user_friends.csv")
+
+# Summary 
+min_f = min(user_friends$No_of_Friends) %>% round(digits=0)
+max_f = max(user_friends$No_of_Friends) %>% round(digits=0)
+mean_f = mean(user_friends$No_of_Friends) %>% round(digits=0)
+unique_users=length(unique(user_friends$UserIDs))
+
+user_summary = c(min_f,mean_f,max_f) %>% t() %>% data.frame()
+
+# Fraction of users with social edge
+friend_freq=as.data.frame(table(user_friends$No_of_Friends)) %>% setNames(c("Number of Friends","Number of Users"))
+plot(friend_freq,main="Distribution of number of users to friends")
+tusers=sum(friend_freq$`Number of Users`)
+friend_freq$Percent_of_Users=round((friend_freq$`Number of Users`/sum(friend_freq$`Number of Users`))*100,2)
+
+```
+
+# Summary of users and their social edges
+
+```{r,echo=FALSE}
+user_summary %>% kable(col.names=c("Minimum","Average","Maximum"),format = "pandoc",caption = "Number of friends",align='c')
+
+data.frame(friend_freq$Percent_of_Users,friend_freq$`Number of Friends`) %>% head(n=10) %>% kable(col.names=c("Percent of Users","Number of Friends"),format = "pandoc", caption = "Fraction of users with a social edge",align='c')
+
+```
