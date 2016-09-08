@@ -6,7 +6,7 @@ R - CODE
 
 1) Extract Friends List from User JSON file
 
-2) Read RDS file and summarize data: Reads userIDs and friendID list, calculate the number of friends per userID and the fraction of users that have friends or a social edge
+2) Data Summary: Read RDS file and calculates the number of friends per userID and the fraction of users that have friends or a social edge
 
 DATA SAVED ON GOOGLE SHARED DRIVE
 
