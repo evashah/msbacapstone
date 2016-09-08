@@ -10,7 +10,7 @@ R - CODE
 
 DATA SAVED ON GOOGLE SHARED DRIVE
 
-1) User_Friends.csv: Includes userIDs, number of friends and list of friendIDs per user
+1) User_Friends.csv: Includes userIDs, number of friends and list of friendsIDs per user
 
 2) Friends_list.rds: List of UserIDs and list of friendsIDs per user
 
