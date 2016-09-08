@@ -15,5 +15,29 @@ Data saved on Google Shared Drive
 
 Link = https://drive.google.com/open?id=0BwrA7eAVD8Y9Q3hzTUlweUhJc0k
 
+Summary Output:
+
+Table: Number of friends
+
+ Minimum    Average    Maximum 
+---------  ---------  ---------
+    0          6        3812   
+    
+    
+Table: Fraction of users with a social edge (9 or less)
+
+ Percent of Users    Number of Friends 
+------------------  -------------------
+      54.84                  0         
+      12.00                  1         
+       6.38                  2         
+       4.20                  3         
+       3.00                  4         
+       2.25                  5         
+       1.81                  6         
+       1.45                  7         
+       1.22                  8         
+       1.04                  9   
+
 
 
