@@ -16,8 +16,8 @@ Data saved on Google Shared Drive
 
 Link: https://drive.google.com/open?id=0BwrA7eAVD8Y9Q3hzTUlweUhJc0k
 
-Summary Output
-Link: 
+Summary Output on Rpubs:
+Link: http://rpubs.com/evashah/capstone-summary-users-friends
 
 
 
